@@ -27,15 +27,16 @@ const Profile = () => {
             <HeartCircle style={{marginRight: 1,marginTop:5}} size="28"  color='red'/>
             <Text style={styles.title}>SendiFit</Text>
           </View>
-          <TouchableOpacity >
-          <Home 
-          style={{marginLeft:15,marginBottom:4,backgroundColor:"#fff8dc",borderRadius:10}} 
-          size="30"  color='red'
-          />
-          <View style={{alignItems:'center',marginLeft:15}}>
-            <Text style={{color: 'black',fontSize:12}}>Home</Text>
+          <View style={styles.profileContainer}>
+            <TouchableOpacity >
+              <Image
+                source={{
+                  uri: 'https://i.pinimg.com/236x/c4/7e/7c/c47e7c626e543c7852c0d5739cd5a9a3.jpg',
+                }}
+                style={styles.profileImage}
+              />
+            </TouchableOpacity>
           </View>
-          </TouchableOpacity>
         </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -124,6 +125,16 @@ const styles = StyleSheet.create({
     backgroundColor:"red",
     borderBottomLeftRadius:20,
     borderBottomRightRadius:20
+  },
+  profileContainer: {
+    marginLeft: 1,
+    flexDirection: 'row',
+  },
+  profileImage: {
+    width: 45,
+    height: 45,
+    borderRadius: 50,
+    marginBottom: 5,
   },
  titleContainer: {
     flex: 1,

@@ -3,8 +3,10 @@ import FastImage from 'react-native-fast-image';
 import {Receipt21, ArrowRight2,NoteText} from 'iconsax-react-native';
 import React from 'react';
 import { fontType, colors } from '../theme';
+import {useNavigation} from '@react-navigation/native';
 
 const ItemSmall = ({item}) => {
+  const navigation = useNavigation();
   return (
     <TouchableOpacity style={styles.cardItem} onPress={() => navigation.navigate('BlogDetail', {blogId: item.id})}>
     <View style={{gap: 5, flex:1}}> 

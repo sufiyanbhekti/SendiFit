@@ -38,7 +38,7 @@ export default function Home() {
         onChangeText={setSearchText}
       />
       </View>
-      <View style={{...category.logo, marginLeft: 10}}>
+      {/* <View style={{...category.logo, marginLeft: 10}}>
          <View>
          <TouchableOpacity >
          <View style={category.itemCat1}>
@@ -69,7 +69,7 @@ export default function Home() {
               <Text style={{color: 'black'}}>Layanan(CS)</Text>
             </View>
           </View>
-        </View>
+        </View> */}
       </View>
       <ListBlog />
       </View>
@@ -553,7 +553,7 @@ const styles = StyleSheet.create({
   imageBanner: {
     backgroundColor: 'rgba(255, 0, 0, 0.71)',
     width: 'auto',
-    height: 150,
+    height: 100,
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
   },

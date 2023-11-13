@@ -1,5 +1,5 @@
-import {StyleSheet, Text, View, ScrollView, FlatList,TextInput,TouchableOpacity } from 'react-native';
-import React from 'react';
+import {StyleSheet, Text, View, ScrollView, FlatList,TextInput,TouchableOpacity,Image,Animated } from 'react-native';
+import React, {useRef} from 'react';
 import {Doclist} from '../../../data';
 import {ItemSmall} from '../../components'; 
 import {HeartSearch,Home} from 'iconsax-react-native';
@@ -38,6 +38,13 @@ const FlatListRecent = () => {
   );
 };
 const Konsul = () => {
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const diffClampY = Animated.diffClamp(scrollY, 0, 142);
+  const recentY = diffClampY.interpolate({
+    inputRange: [0, 142],
+    outputRange: [0, -142],
+    extrapolate: 'clamp',
+  });
   const recentBlog = Doclist.slice(0,5);
   const [searchText, setSearchText] = useState('');
   return (
@@ -53,28 +60,34 @@ const Konsul = () => {
         onChangeText={setSearchText}
       />
       </View>
-      <TouchableOpacity >
-          <Home 
-          style={{marginLeft:15,marginBottom:4,backgroundColor:"#fff8dc",borderRadius:10}} 
-          size="30"  color='red'
-          />
-          <View style={{alignItems:'center',marginLeft:15}}>
-            <Text style={{color: 'black',fontSize:12}}>Home</Text>
+      <View style={styles.profileContainer}>
+            <TouchableOpacity >
+              <Image
+                source={{
+                  uri: 'https://i.pinimg.com/236x/c4/7e/7c/c47e7c626e543c7852c0d5739cd5a9a3.jpg',
+                }}
+                style={styles.profileImage}
+              />
+            </TouchableOpacity>
           </View>
-          </TouchableOpacity>
       </View>
-      <View>
+      <Animated.View style={[recent.container, {transform: [{translateY: recentY}]}]}>
         <Text style={recent.text}>Paket Layanan Kesehatan</Text>
         <FlatListRecent />
-      </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      </Animated.View>
+      <Animated.ScrollView
+        showsVerticalScrollIndicator={false}
+        onScroll={Animated.event(
+          [{nativeEvent: {contentOffset: {y: scrollY}}}],
+          {useNativeDriver: true},
+        )}
+        contentContainerStyle={{paddingTop: 1}}>
         <View style={styles.listCard}>
-          {recentBlog.map((item, index) => (
+        {recentBlog.map((item, index) => (
             <ItemSmall item={item} key={index} />
-          ))}
-        </View>
-        
-      </ScrollView>
+        ))}
+    </View>
+    </Animated.ScrollView>
     </View>
   );
 };
@@ -84,10 +97,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingBottom: 10,
     gap: 10,
+    marginTop:150
   },
   container: {
     flex: 1,
+    flexDirection: 'row',
+    zIndex: 999,
     backgroundColor: colors.white(),
+  },
+  profileContainer: {
+    marginLeft: 1,
+    flexDirection: 'row',
+  },
+  profileImage: {
+    width: 45,
+    height: 45,
+    borderRadius: 50,
+    marginBottom: 5,
   },
 header: {
   paddingHorizontal: 24,
@@ -97,6 +123,8 @@ header: {
   height: 60,
   elevation: 8,
   paddingTop: 8,
+  zIndex: 1000,
+  position: 'absolute',
   paddingBottom: 4,
   backgroundColor:"red",
   borderBottomLeftRadius:20,
@@ -121,6 +149,15 @@ header: {
   },
 });
 const recent = StyleSheet.create({
+  container:{
+    position: 'absolute',
+    backgroundColor: colors.white(),
+    zIndex: 999,
+    top: 60,
+    left: 0,
+    right: 0,
+    elevation: 1000,
+  },
   button: {
     paddingHorizontal: 20,
     paddingVertical: 10,
