@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import {ScrollView, StyleSheet, Text, View, TouchableOpacity,Image} from 'react-native';
 import {HeartCircle,Home,Logout} from 'iconsax-react-native';
 import React from 'react';
@@ -6,20 +7,9 @@ import {ProfileData, Doclist} from '../../../data';
 import {ItemSmall} from '../../components';
 import { fontType, colors } from '../../theme';
 
-const formatNumber = number => {
-  if (number >= 1000000000) {
-    return (number / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
-  }
-  if (number >= 1000000) {
-    return (number / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-  }
-  if (number >= 1000) {
-    return (number / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
-  }
-  return number.toString();
-};
 const data = Doclist.slice(2,3);
 const Profile = () => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
        <View style={styles.header}>
@@ -45,6 +35,7 @@ const Profile = () => {
           gap: 10,
           paddingVertical: 20,
         }}>
+          
         <View style={{gap: 15, alignItems: 'center'}}>
           <FastImage
             style={profile.pic}
@@ -166,8 +157,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius:200,
     borderWidth:2,
     borderColor:"red"
-  }
-  
+  },
 });
 
 const profile = StyleSheet.create({
