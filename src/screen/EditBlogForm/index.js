@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator} from 'react-native';
 import {ArrowLeft} from 'iconsax-react-native';
 import {useNavigation} from '@react-navigation/native';
 import {fontType, colors} from '../../theme';
 import axios from 'axios';
 
-const AddBlogForm = () => {
-  const [loading, setLoading] = useState(false);
+const EditBlogForm = ({route}) => {
+const {blogId} = route.params;
   const [blogData, setBlogData] = useState({
     no: "",
     nama: "",
@@ -20,14 +20,36 @@ const AddBlogForm = () => {
   };
   const [image, setImage] = useState(null);
   const navigation = useNavigation();
-  const handleUpload = async () => {
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    getBlogById();
+  }, [blogId]);
+
+  const getBlogById = async () => {
+    try {
+      const response = await axios.get(
+        `https://656b3257dac3630cf727d4b6.mockapi.io/SendiFit/Layanan/${blogId}`,
+      );
+      setBlogData({
+        no : response.data.no,
+        nama : response.data.nama,
+        deskripsi : response.data.deskripsi,
+      })
+    setImage(response.data.image)
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleUpdate = async () => {
     setLoading(true);
     try {
-      await axios.post('https://656b3257dac3630cf727d4b6.mockapi.io/SendiFit/Layanan', {
-          no: blogData.no,
-          nama: blogData.nama,
-          deskripsi: blogData.deskripsi,
-          image,
+      await axios
+        .put(`https://656b3257dac3630cf727d4b6.mockapi.io/SendiFit/Layanan/${blogId}`, {
+            no: blogData.no,
+            nama: blogData.nama,
+            deskripsi: blogData.deskripsi,
+            image,
         })
         .then(function (response) {
           console.log(response);
@@ -41,14 +63,15 @@ const AddBlogForm = () => {
       console.log(e);
     }
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <ArrowLeft color={colors.black()} variant="Linear" size={24} />
         </TouchableOpacity>
-        <View style={{ flex: 1, alignItems: "center" }}>
-          <Text style={styles.title}>Konsultasi</Text>
+        <View style={{flex: 1, alignItems: 'center'}}>
+          <Text style={styles.title}>Edit</Text>
         </View>
       </View>
       <ScrollView
@@ -70,7 +93,7 @@ const AddBlogForm = () => {
             style={textInput.title}
           />
         </View>
-        <Text style={styles.buttonLabel}>Identitas</Text>
+        <Text style={styles.buttonLabel}>Nama Paket</Text>
         <View style={[textInput.borderDashed]}>
           <TextInput
           placeholder="ketik disni"
@@ -81,7 +104,7 @@ const AddBlogForm = () => {
             style={textInput.content}
           />
         </View>
-        <Text style={styles.buttonLabel}>Deskripsi Paket</Text>
+        <Text style={styles.buttonLabel}>Deskripsi</Text>
         <View style={[textInput.borderDashed, { minHeight: 250 }]}>
           <TextInput
           placeholder="ketik disni"
@@ -104,8 +127,8 @@ const AddBlogForm = () => {
         </View>
       </ScrollView>
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.button} onPress={handleUpload}>
-          <Text style={styles.buttonLabel}>Upload</Text>
+        <TouchableOpacity style={styles.button} onPress={handleUpdate}>
+          <Text style={styles.buttonLabel}>Update</Text>
         </TouchableOpacity>
       </View>
       {loading && (
@@ -117,7 +140,7 @@ const AddBlogForm = () => {
   );
 };
 
-export default AddBlogForm;
+export default EditBlogForm;
 
 const styles = StyleSheet.create({
   container: {
@@ -126,8 +149,8 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 24,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     height: 52,
     elevation: 8,
     paddingTop: 8,
@@ -137,7 +160,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius:20,
   },
   title: {
-    fontFamily: fontType["Pjs-Bold"],
+    fontFamily: fontType['Pjs-Bold'],
     fontSize: 16,
     color: colors.black(),
   },
@@ -200,12 +223,12 @@ const textInput = StyleSheet.create({
 const category = StyleSheet.create({
   title: {
     fontSize: 12,
-    fontFamily: fontType["Pjs-Regular"],
+    fontFamily: fontType['Pjs-Regular'],
     color: colors.grey(0.6),
   },
   container: {
-    flexWrap: "wrap",
-    flexDirection: "row",
+    flexWrap: 'wrap',
+    flexDirection: 'row',
     gap: 10,
     marginTop: 10,
   },
@@ -216,6 +239,6 @@ const category = StyleSheet.create({
   },
   name: {
     fontSize: 10,
-    fontFamily: fontType["Pjs-Medium"],
+    fontFamily: fontType['Pjs-Medium'],
   },
 });

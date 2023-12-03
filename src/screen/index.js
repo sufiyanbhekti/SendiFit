@@ -3,4 +3,5 @@ import Konsul from "./Konsul";
 import BlogDetail from "./BlogDetail";
 import Profile from "./Profile";
 import AddBlogForm from "./AddBlogForm";
-export {Home, Konsul, Profile,BlogDetail,AddBlogForm}
+import EditBlogForm from "./EditBlogForm";
+export {Home, Konsul, Profile,BlogDetail,AddBlogForm,EditBlogForm}

@@ -4,7 +4,6 @@ import {HeartCircle,Home,Logout} from 'iconsax-react-native';
 import React from 'react';
 import FastImage from 'react-native-fast-image';
 import {ProfileData, Doclist} from '../../../data';
-import {ItemSmall} from '../../components';
 import { fontType, colors } from '../../theme';
 
 const data = Doclist.slice(2,3);
@@ -27,16 +26,19 @@ const Profile = () => {
               />
             </TouchableOpacity>
           </View>
+          
         </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingHorizontal: 24,
+          paddingHorizontal: 6,
           gap: 10,
           paddingVertical: 20,
+          backgroundColor:'rgba(227, 26, 129, 0.09)',
+          borderRadius:20,
         }}>
           
-        <View style={{gap: 15, alignItems: 'center'}}>
+          <View style={profile.Profil}>
           <FastImage
             style={profile.pic}
             source={{
@@ -46,24 +48,34 @@ const Profile = () => {
             }}
             resizeMode={FastImage.resizeMode.cover}
           />
+          <View style={profile.des}>
           <Text style={profile.textContainer}>Nama : {ProfileData.name}</Text>
           <View style={{gap: 5,marginRight:24}}>
             <Text style={profile.textContainer}>
               UMUR : {ProfileData.umur}
             </Text>
           </View>
-          <View style={{flexDirection: 'row', gap: 20,backgroundColor:"#fff8dc",padding:4}}>
-            <View style={{alignItems: 'center', gap: 5}}>
+          </View>
+          </View>
+            <TouchableOpacity
+              style={styles.floatButton2}>
+              <Text style={styles.Text}>Edit Profile</Text>
+            </TouchableOpacity>
+    
+           <View style={styles.containerbawah}>
+            
+          <View style={{flexDirection: 'row', gap: 20,padding:4}}>
+            <View style={styles.listdes}>
               <Text style={profile.tag}>JenisKelamin</Text>
               <Text style={profile.sum}>{ProfileData.JenisKelamin}</Text>              
             </View>
-            <View style={{alignItems: 'center', gap: 5}}>
+            <View style={styles.listdes}>
             <Text style={profile.tag}>Paket Layanan</Text>
               <Text style={profile.sum}>
                 {ProfileData.paket}
               </Text>
             </View>
-            <View style={{alignItems: 'center', gap: 5}}>
+            <View style={styles.listdes}>
             <Text style={profile.tag}>Riwayat Penyakit</Text>
               <Text style={profile.sum}>
                 {ProfileData.penyakit}
@@ -71,29 +83,13 @@ const Profile = () => {
             </View>
           </View>
         </View>
-        <View style={profile.Text}>
-            <Text style={profile.TextProfile}>Paket Yang Anda Ambil :</Text>
-          </View>
-          <View style={styles.Riwayat}></View>
-          <View style={{paddingVertical: 10, gap:10}}>
-          {data.map((item, index) => (
-            <ItemSmall item={item} key={index} />
-          ))}
-        </View>
       </ScrollView>
-      <View style={styles.containerbawah}>
-          <TouchableOpacity>
-            <View style={{flexDirection: 'row', 
-              gap: 10,paddingRight:21,
-              alignItems: 'center',
-              backgroundColor:"#fff8dc",
-              borderRadius:10
-              }}>
-              <Logout color={'red'} variant={'Bulk'} size={25} />
-              <Text style={profile.textContainer}>Logout</Text>
-            </View>
-          </TouchableOpacity>
-          </View>
+        <TouchableOpacity
+          style={styles.floatingButton}
+          onPress={() => navigation.navigate("Home")}>
+          <Logout color={colors.white()} variant="Linear" size={20} />
+          <Text style={styles.Text}>Logout</Text>
+        </TouchableOpacity>
     </View>
   );
 };
@@ -115,7 +111,7 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
     backgroundColor:"red",
     borderBottomLeftRadius:20,
-    borderBottomRightRadius:20
+    borderBottomRightRadius:20,
   },
   profileContainer: {
     marginLeft: 1,
@@ -144,19 +140,44 @@ const styles = StyleSheet.create({
     marginBottom:1,
   },
   containerbawah:{
-    paddingHorizontal: 24,
+    gap: 15, 
+    alignItems: 'center',
+    marginTop :75,
+  },
+  listdes:{
+    alignItems: 'center',
+     gap: 5, 
+     backgroundColor: 'rgba(255, 0, 0, 0.1)',
+     borderRadius:15
+  },
+  floatButton2:{
     justifyContent: 'flex-end',
     flexDirection: 'row',
-    alignItems: 'center',
-    height: 45,
+    backgroundColor: 'rgba(255, 0, 0, 0.70)',
+    padding: 15,
+    position: 'absolute',
+    borderRadius: 10,
+    bottom: 150,
+    right: 129,
+    marginBottom:-60
+  },
+  floatingButton: {
+    justifyContent: 'flex-end',
+    flexDirection: 'row',
+    backgroundColor: 'rgba(255, 0, 0, 0.71)',
+    padding: 15,
+    position: 'absolute',
+    bottom: 24,
+    right: 24,
+    borderRadius: 10,
+    shadowColor: colors.blue(),
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
     elevation: 8,
-    paddingTop: 8,
-    paddingBottom: 4,
-    backgroundColor:"orange",
-    marginLeft:180,
-    borderTopLeftRadius:200,
-    borderWidth:2,
-    borderColor:"red"
   },
 });
 
@@ -177,7 +198,6 @@ const profile = StyleSheet.create({
     fontFamily: fontType['Pjs-SemiBold'],
     color: colors.black(),
     borderBottomWidth:2,
-    
   },
   tag: {
     fontSize: 14,
@@ -187,16 +207,35 @@ const profile = StyleSheet.create({
     borderRadius:10,
     borderWidth: 2,
     alignItems:'center',
-    paddingLeft:5,
+    paddingLeft:2,
     paddingRight:2
   },
+  Profil:{
+    flexDirection : 'row',
+    justifyContent: 'flex-start',
+    alignItems : 'center',
+    shadowColor: 'red',
+    borderRadius:90,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+    elevation: 8,
+  },
+  des:{
+    justifyContent: 'flex-end',
+    marginLeft: 20,
+    borderRadius:15,
+    padding :2,
+  },
   Text: {
-  
+    flexDirection: 'Row',
   },
   TextProfile: {
     fontSize: 18,
     color:"black"
     
   },
-
 });

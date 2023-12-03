@@ -42,7 +42,7 @@
   
   export const ProfileData = {
     profilePict:
-      'https://i.pinimg.com/236x/c4/7e/7c/c47e7c626e543c7852c0d5739cd5a9a3.jpg',
+      'https://i.pinimg.com/236x/90/60/66/9060661b7378b566db959c326cfca775.jpg',
     name: 'Justina Xie',
     umur: '21 Tahun',
     JenisKelamin: 'Perempuan',
@@ -56,35 +56,35 @@
       id : 1,
       no : "Paket 1",
       nama : "Konsultasi Kesehatan Sendi",
-      des : "Evaluasi oleh profesional medis atau ahli kesehatan seperti dokter, fisioterapis, atau ahli reumatologi untuk menilai kondisi sendi dan memberikan rekomendasi perawatan.",
+      deskripsi : "Evaluasi oleh profesional medis atau ahli kesehatan seperti dokter, fisioterapis, atau ahli reumatologi untuk menilai kondisi sendi dan memberikan rekomendasi perawatan.",
       image : "https://i.pinimg.com/236x/67/1a/b6/671ab6ad5a6256191830a90978b3aee0.jpg"
     },
     {
       id : 2,
       no : "Paket 2",
       nama : "Pemantauan Kesehatan Sendi",
-      des : " Sistem pemantauan kesehatan sendi yang memungkinkan individu untuk memantau gejala, perubahan, atau perburukan kondisi sendi mereka.",
+      deskripsi : " Sistem pemantauan kesehatan sendi yang memungkinkan individu untuk memantau gejala, perubahan, atau perburukan kondisi sendi mereka.",
       image : "https://i.pinimg.com/236x/83/46/75/8346759e5fbb9de16cac52a7dd831548.jpg"
     },
     {
       id : 3,
       no : "Paket 3",
       nama : "Program Latihan Khusus",
-      des : "Rencana latihan yang disesuaikan dengan kebutuhan individu, termasuk latihan penguatan, fleksibilitas, dan perbaikan mobilitas.",
+      deskripsi : "Rencana latihan yang disesuaikan dengan kebutuhan individu, termasuk latihan penguatan, fleksibilitas, dan perbaikan mobilitas.",
       image : "https://i.pinimg.com/236x/42/40/6f/42406ff6de738e3f197906a1736ef284.jpg"
     },
     {
       id : 4,
       no : "Paket 4",
       nama : "Terapi Fisik",
-      des : "Sesi terapi fisik yang dikendalikan oleh fisioterapis untuk membantu memulihkan mobilitas, mengurangi rasa sakit, dan meningkatkan fungsi sendi.",
+      deskripsi : "Sesi terapi fisik yang dikendalikan oleh fisioterapis untuk membantu memulihkan mobilitas, mengurangi rasa sakit, dan meningkatkan fungsi sendi.",
       image : "https://i.pinimg.com/236x/f4/34/00/f43400de34f7d3d61ddc498a40fd69bd.jpg"
     },
     {
       id : 5,
       no : "Paket 5",
       nama : "Rehabilitasi Pascaoperasi",
-      des : "Perawatan dan terapi khusus untuk individu yang telah menjalani operasi sendi, seperti penggantian sendi.",
+      deskripsi : "Perawatan dan terapi khusus untuk individu yang telah menjalani operasi sendi, seperti penggantian sendi.",
       image : "https://i.pinimg.com/236x/49/4f/00/494f006d1e637b6efdebdef18f71c605.jpg"
     },
   ]

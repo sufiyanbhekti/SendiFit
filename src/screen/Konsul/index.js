@@ -1,17 +1,19 @@
-import {StyleSheet, Text, View, ScrollView, FlatList,TextInput,TouchableOpacity,Image,Animated } from 'react-native';
-import React, {useRef} from 'react';
+import {StyleSheet, Text, View, ScrollView,ActivityIndicator, FlatList,TextInput,TouchableOpacity,Image,Animated } from 'react-native';
+import React, {useRef,useCallback} from 'react';
 import {Doclist} from '../../../data';
 import {ItemSmall} from '../../components'; 
-import {HeartSearch,Home} from 'iconsax-react-native';
+import {HeartSearch,Home,Setting2, Edit} from 'iconsax-react-native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import { fontType, colors } from '../../theme';
 import { useState } from 'react';
+import axios from 'axios';
 
 const data = [
-  {id: 1, label: 'Konsultasi Kesehatan Sendi'},
-  {id: 2, label: 'Pemantauan Kesehatan Sendi'},
-  {id: 3, label: 'Program Latihan Khusus'},
-  {id: 4, label: 'Rehabilitasi Pascaoperasi'},
-  {id: 5, label: 'Terapi Fisik'},
+  {id: 1, label: '1.Konsultasi Kesehatan Sendi'},
+  {id: 2, label: '2.Pemantauan Kesehatan Sendi'},
+  {id: 3, label: '3.Program Latihan Khusus'},
+  {id: 4, label: '4.Rehabilitasi Pascaoperasi'},
+  {id: 5, label: '5.Terapi Fisik'},
 ];
 
 const ItemRecent = ({item}) => {
@@ -38,6 +40,35 @@ const FlatListRecent = () => {
   );
 };
 const Konsul = () => {
+  const navigation = useNavigation();
+  const [loading, setLoading] = useState(true);
+  const [blogData, setBlogData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const getDataBlog = async () => {
+    try {
+      const response = await axios.get(
+        'https://656b3257dac3630cf727d4b6.mockapi.io/SendiFit/Layanan',
+      );
+      setBlogData(response.data);
+      setLoading(false)
+    } catch (error) {
+        console.error(error);
+    }
+  };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      getDataBlog()
+      setRefreshing(false);
+    }, 1500);
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      getDataBlog();
+    }, [])
+  );
   const scrollY = useRef(new Animated.Value(0)).current;
   const diffClampY = Animated.diffClamp(scrollY, 0, 142);
   const recentY = diffClampY.interpolate({
@@ -45,7 +76,6 @@ const Konsul = () => {
     outputRange: [0, -142],
     extrapolate: 'clamp',
   });
-  const recentBlog = Doclist.slice(0,5);
   const [searchText, setSearchText] = useState('');
   return (
     <View style={styles.container}>
@@ -74,6 +104,7 @@ const Konsul = () => {
       <Animated.View style={[recent.container, {transform: [{translateY: recentY}]}]}>
         <Text style={recent.text}>Paket Layanan Kesehatan</Text>
         <FlatListRecent />
+        
       </Animated.View>
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
@@ -82,12 +113,27 @@ const Konsul = () => {
           {useNativeDriver: true},
         )}
         contentContainerStyle={{paddingTop: 1}}>
-        <View style={styles.listCard}>
+        {/* <View style={styles.listCard}>
         {recentBlog.map((item, index) => (
             <ItemSmall item={item} key={index} />
         ))}
-    </View>
+    </View> */}
+          
+          <View style={{paddingVertical: 150, gap: 10,paddingHorizontal :1}}>
+          <Text style={recent.text}>Paket Yang Diambil :</Text>
+          {loading ? (
+            <ActivityIndicator size={'large'} color={colors.blue()} />
+          ) : (
+            blogData.map((item, index) => <ItemSmall item={item} key={index} />)
+          )}
+        </View>
     </Animated.ScrollView>
+      <TouchableOpacity
+      style={styles.floatingButton}
+      onPress={() => navigation.navigate("AddBlog")}
+      >
+      <Edit color={colors.white()} variant="Linear" size={20} />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -147,6 +193,23 @@ header: {
     margin: 10,
     color: colors.white(),
   },
+  floatingButton: {
+    backgroundColor: 'rgba(255, 0, 0, 0.71)',
+    padding: 15,
+    position: 'absolute',
+    bottom: 24,
+    right: 24,
+    borderRadius: 10,
+    shadowColor: colors.blue(),
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+
+    elevation: 8,
+  },
 });
 const recent = StyleSheet.create({
   container:{
@@ -157,6 +220,15 @@ const recent = StyleSheet.create({
     left: 0,
     right: 0,
     elevation: 1000,
+    shadowColor: colors.blue(),
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+
+    elevation: 8,
   },
   button: {
     paddingHorizontal: 20,

@@ -36,13 +36,12 @@ const ItemSmall = ({item}) => {
         />
       </View>
       <View style={styles.cardInfo}>
-        <Text style={styles.cardText}>{item.des}</Text>
+        <Text style={styles.cardText}>{item.deskripsi}</Text>
         <ArrowRight2
           size={10}
           variant="Linear"
           color={colors.grey(0.6)}
         />
-        <Text style={styles.cardText}>{item.totalComments}</Text>
       </View>
     </View>
     </View>
@@ -59,7 +58,7 @@ listCard: {
   gap: 15,
 },
 cardItem: {
-  backgroundColor: "#fff8dc",
+  backgroundColor: 'rgba(227, 26, 129, 0.09)',
   flexDirection: 'row',
   borderRadius: 10,
 },
@@ -73,8 +72,8 @@ cardTitle: {
   fontSize: 16,
   fontFamily: fontType['Pjs-Bold'],
   color: colors.black(),
-  textAlign:'justify',
-  marginLeft:130,
+  textAlign:'center',
+  marginLeft:13,
   
 },
 cardText: {
@@ -84,8 +83,8 @@ cardText: {
   color: colors.grey(0.6),
 },
 cardImage: {
-  width: 310,
-  height: 100,
+  width: 357,
+  height: 150,
   borderRadius: 10,
   resizeMode: 'cover',
 
