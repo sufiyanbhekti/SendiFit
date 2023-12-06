@@ -5,11 +5,17 @@ import {useNavigation} from '@react-navigation/native';
 import {DocDetail} from '../../../data';
 import FastImage from 'react-native-fast-image';
 import { fontType, colors } from '../../theme';
-import axios from 'axios';
+import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 import ActionSheet from 'react-native-actions-sheet';
 
 
 const BlogDetail = ({route}) => {
+  const {blogId} = route.params;
+  const [iconStates, setIconStates] = useState({
+    liked: {variant: 'Linear', color: colors.grey(0.6)},
+    bookmarked: {variant: 'Linear', color: colors.grey(0.6)},
+  });
   const [selectedBlog, setSelectedBlog] = useState(null);
   const [loading, setLoading] = useState(true);
   const actionSheetRef = useRef(null);
@@ -23,40 +29,48 @@ const BlogDetail = ({route}) => {
   };
 
   useEffect(() => {
-    getBlogById();
+    const subscriber = firestore()
+      .collection('blog')
+      .doc(blogId)
+      .onSnapshot(documentSnapshot => {
+        const blogData = documentSnapshot.data();
+        if (blogData) {
+          console.log('Blog data: ', blogData);
+          setSelectedBlog(blogData);
+        } else {
+          console.log(`Blog with ID ${blogId} not found.`);
+        }
+      });
+    setLoading(false);
+    return () => subscriber();
   }, [blogId]);
-
-  const getBlogById = async () => {
+  const navigateEdit = () => {
+    closeActionSheet();
+    navigation.navigate('EditBlog', {blogId});
+  };
+  const handleDelete = async () => {
+    setLoading(true);
     try {
-      const response = await axios.get(
-        `https://656b3257dac3630cf727d4b6.mockapi.io/SendiFit/Layanan/${blogId}`,
-      );
-      setSelectedBlog(response.data);
-      setLoading(false);
+      await firestore()
+        .collection('blog')
+        .doc(blogId)
+        .delete()
+        .then(() => {
+          console.log('Blog deleted!');
+        });
+      if (selectedBlog?.image) {
+        const imageRef = storage().refFromURL(selectedBlog?.image);
+        await imageRef.delete();
+      }
+      console.log('Blog deleted!');
+      closeActionSheet();
+      setSelectedBlog(null);
+      setLoading(false)
+      navigation.navigate('Konsul');
     } catch (error) {
       console.error(error);
     }
   };
-
-  const navigateEdit = () => {
-    closeActionSheet()
-    navigation.navigate('EditBlog', {blogId})
-  }
-  const handleDelete = async () => {
-   await axios.delete(`https://656b3257dac3630cf727d4b6.mockapi.io/SendiFit/Layanan/${blogId}`)
-      .then(() => {
-        closeActionSheet()
-        navigation.navigate('Konsul');
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-  const {blogId} = route.params;
-  const [iconStates, setIconStates] = useState({
-    liked: {variant: 'Linear', color: colors.grey(0.6)},
-    bookmarked: {variant: 'Linear', color: colors.grey(0.6)},
-  });
  
   const navigation = useNavigation();
   const toggleIcon = iconName => {

@@ -1,12 +1,13 @@
 import {StyleSheet, Text, View, ScrollView,ActivityIndicator, FlatList,TextInput,TouchableOpacity,Image,Animated } from 'react-native';
-import React, {useRef,useCallback} from 'react';
+import React, {useRef,useCallback,useEffect} from 'react';
 import {Doclist} from '../../../data';
+import FastImage from 'react-native-fast-image';
 import {ItemSmall} from '../../components'; 
 import {HeartSearch,Home,Setting2, Edit} from 'iconsax-react-native';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import { fontType, colors } from '../../theme';
 import { useState } from 'react';
-import axios from 'axios';
+import firestore from '@react-native-firebase/firestore';
 
 const data = [
   {id: 1, label: '1.Konsultasi Kesehatan Sendi'},
@@ -44,31 +45,41 @@ const Konsul = () => {
   const [loading, setLoading] = useState(true);
   const [blogData, setBlogData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const getDataBlog = async () => {
-    try {
-      const response = await axios.get(
-        'https://656b3257dac3630cf727d4b6.mockapi.io/SendiFit/Layanan',
-      );
-      setBlogData(response.data);
-      setLoading(false)
-    } catch (error) {
-        console.error(error);
-    }
-  };
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection('blog')
+      .onSnapshot(querySnapshot => {
+        const blogs = [];
+        querySnapshot.forEach(documentSnapshot => {
+          blogs.push({
+            ...documentSnapshot.data(),
+            id: documentSnapshot.id,
+          });
+        });
+        setBlogData(blogs);
+        setLoading(false);
+      });
+    return () => subscriber();
+  }, []);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
-      getDataBlog()
+      firestore()
+        .collection('blog')
+        .onSnapshot(querySnapshot => {
+          const blogs = [];
+          querySnapshot.forEach(documentSnapshot => {
+            blogs.push({
+              ...documentSnapshot.data(),
+              id: documentSnapshot.id,
+            });
+          });
+          setBlogData(blogs);
+        });
       setRefreshing(false);
     }, 1500);
   }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      getDataBlog();
-    }, [])
-  );
   const scrollY = useRef(new Animated.Value(0)).current;
   const diffClampY = Animated.diffClamp(scrollY, 0, 142);
   const recentY = diffClampY.interpolate({
@@ -113,11 +124,6 @@ const Konsul = () => {
           {useNativeDriver: true},
         )}
         contentContainerStyle={{paddingTop: 1}}>
-        {/* <View style={styles.listCard}>
-        {recentBlog.map((item, index) => (
-            <ItemSmall item={item} key={index} />
-        ))}
-    </View> */}
           
           <View style={{paddingVertical: 150, gap: 10,paddingHorizontal :1}}>
           <Text style={recent.text}>Paket Yang Diambil :</Text>

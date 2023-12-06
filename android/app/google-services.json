@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "595667720847",
+    "project_id": "sendifit-d6d0f",
+    "storage_bucket": "sendifit-d6d0f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:595667720847:android:c87666310740a6fa0d6efa",
+        "android_client_info": {
+          "package_name": "com.sendifit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXqdfjvZP-ETI33uDrRSNpoPytxhCtGHE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
