@@ -1,14 +1,54 @@
 import { useNavigation } from "@react-navigation/native";
 import {ScrollView, StyleSheet, Text, View, TouchableOpacity,Image} from 'react-native';
 import {HeartCircle,Home,Logout} from 'iconsax-react-native';
-import React from 'react';
+import React,{useEffect, useState} from 'react';
 import FastImage from 'react-native-fast-image';
 import {ProfileData, Doclist} from '../../../data';
 import { fontType, colors } from '../../theme';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const data = Doclist.slice(2,3);
 const Profile = () => {
+  const [profileData, setProfileData] = useState(null);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const user = auth().currentUser;
+    const fetchProfileData = () => {
+      try {
+        const user = auth().currentUser;
+        if (user) {
+          const userId = user.uid;
+          const userRef = firestore().collection('users').doc(userId);
+          const unsubscribeProfile = userRef.onSnapshot(doc => {
+            if (doc.exists) {
+              const userData = doc.data();
+              setProfileData(userData);
+            } else {
+              console.error('Dokumen pengguna tidak ditemukan.');
+            }
+          });
+          return () => {
+            unsubscribeProfile();
+          };
+        }
+      } catch (error) {
+        console.error('Error fetching profile data:', error);
+      }
+    };
+    fetchProfileData();
+  }, []);
+  const handleLogout = async () => {
+    try {
+      await auth().signOut();
+      await AsyncStorage.removeItem('userData');
+      navigation.replace('Login');
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <View style={styles.container}>
        <View style={styles.header}>
@@ -49,7 +89,7 @@ const Profile = () => {
             resizeMode={FastImage.resizeMode.cover}
           />
           <View style={profile.des}>
-          <Text style={profile.textContainer}>Nama : {ProfileData.name}</Text>
+          <Text style={profile.textContainer}>Nama : {profileData?.fullName}</Text>
           <View style={{gap: 5,marginRight:24}}>
             <Text style={profile.textContainer}>
               UMUR : {ProfileData.umur}
@@ -86,7 +126,7 @@ const Profile = () => {
       </ScrollView>
         <TouchableOpacity
           style={styles.floatingButton}
-          onPress={() => navigation.navigate("Home")}>
+          onPress={handleLogout}>
           <Logout color={colors.white()} variant="Linear" size={20} />
           <Text style={styles.Text}>Logout</Text>
         </TouchableOpacity>

@@ -4,4 +4,7 @@ import BlogDetail from "./BlogDetail";
 import Profile from "./Profile";
 import AddBlogForm from "./AddBlogForm";
 import EditBlogForm from "./EditBlogForm";
-export {Home, Konsul, Profile,BlogDetail,AddBlogForm,EditBlogForm}
+import Login from "./Login";
+import Register from "./Register";
+import SplashScreen from "./SplashScreen";
+export {Home, Konsul, Profile,BlogDetail,AddBlogForm,EditBlogForm,SplashScreen,Register,Login}

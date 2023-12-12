@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator} from 'react-native';
+import {View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator,KeyboardAvoidingView} from 'react-native';
 import {ArrowLeft,AddSquare,Add} from 'iconsax-react-native';
 import {useNavigation} from '@react-navigation/native';
 import {fontType, colors} from '../../theme';
@@ -7,6 +7,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import FastImage from 'react-native-fast-image';
+import auth from '@react-native-firebase/auth';
 
 const AddBlogForm = () => {
   const handleImagePick = async () => {
@@ -37,28 +38,8 @@ const AddBlogForm = () => {
   };
   const [image, setImage] = useState(null);
   const navigation = useNavigation();
-  // const handleUpload = async () => {
-  //   setLoading(true);
-  //   try {
-  //     await axios.post('https://656b3257dac3630cf727d4b6.mockapi.io/SendiFit/Layanan', {
-  //         no: blogData.no,
-  //         nama: blogData.nama,
-  //         deskripsi: blogData.deskripsi,
-  //         image,
-  //       })
-  //       .then(function (response) {
-  //         console.log(response);
-  //       })
-  //       .catch(function (error) {
-  //         console.log(error);
-  //       });
-  //     setLoading(false);
-  //     navigation.navigate('Konsul');
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
   const handleUpload = async () => {
+    const authorId = auth().currentUser.uid;
     let filename = image.substring(image.lastIndexOf('/') + 1);
     const extension = filename.split('.').pop();
     const name = filename.split('.').slice(0, -1).join('.');
@@ -74,6 +55,7 @@ const AddBlogForm = () => {
         nama: blogData.nama,
         deskripsi: blogData.deskripsi,
         image:url,
+        authorId
       });
       setLoading(false);
       console.log('Blog added!');
@@ -83,7 +65,11 @@ const AddBlogForm = () => {
     }
   };
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={{flex: 1}}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      enabled>
+        <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <ArrowLeft color={colors.black()} variant="Linear" size={24} />
@@ -198,6 +184,8 @@ const AddBlogForm = () => {
         </View>
       )}
     </View>
+  </KeyboardAvoidingView>
+    
   );
 };
 
